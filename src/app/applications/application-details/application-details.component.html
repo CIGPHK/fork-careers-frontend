@@ -1,0 +1,26 @@
+<ng-container *ngIf="application$ | async as application">
+  <nb-card>
+    <nb-card-header *ngIf="position$ | async as position">
+      Your application to the position {{ position.team }} - {{ position.jobTitle }} - {{ position.location }}
+    </nb-card-header>
+    <nb-card-body>
+      <h5>Application status</h5>
+      <br />
+      <p>
+        Your application was submitted on {{ application.date['seconds'] * 1000 | date }} and its status is application
+        {{ application.status }}.
+      </p>
+      <br />
+      <div class="row show-grid" *ngIf="showWithdrawButton(application)">
+        <div class="col-3">
+          <button style="width: 100%;" (click)="withdraw()" class="btn btn-danger">WITHDRAW APPLICATION</button>
+        </div>
+      </div>
+      <div class="row show-grid" *ngIf="showReopenButton(application)">
+        <div class="col-3">
+          <button style="width: 100%;" (click)="reopen()" class="btn btn-success">RE-OPEN APPLICATION</button>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</ng-container>

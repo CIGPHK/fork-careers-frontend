@@ -1,0 +1,37 @@
+.link {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.btn.cigp.btn-round {
+  border-radius: 25px !important;
+  font-size: 0.6rem;
+  padding: 0.4rem 1rem;
+}
+
+.btn.btn-secondary.btn-round {
+  cursor: pointer;
+  background-color: white;
+  border-radius: 25px !important;
+  border-color: #e1cfaf;
+  color: #e1cfaf;
+}
+
+.btn.btn-secondary.btn-round:hover {
+  background-color: #e1cfaf;
+  color: white;
+}
+
+.neutralLink {
+  cursor: pointer;
+}
+
+.neutralLink:hover {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.center {
+  text-align: center;
+}

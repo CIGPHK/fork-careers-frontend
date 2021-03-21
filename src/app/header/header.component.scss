@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+nb-action {
+  height: auto;
+  display: flex;
+  align-content: center;
+}
+
+nb-user {
+  cursor: pointer;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  width: auto;
+}
+
+.header-container .sidebar-toggle {
+  text-decoration: none;
+  color: nb-theme(text-hint-color);
+}
+.header-container .sidebar-toggle nb-icon {
+  font-size: 1.75rem;
+}
+
+.logo {
+  padding: 0 1.25rem;
+  font-size: 1.75rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.logo img {
+  height: 30px;
+  border-left: none;
+}

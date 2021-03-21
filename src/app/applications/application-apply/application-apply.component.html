@@ -1,0 +1,260 @@
+<ng-container *ngIf="!(submitted$ | async)">
+  <ng-container *ngIf="position$ | async as position">
+    <nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="submittedBool">
+      <nb-card-body>
+        <nb-stepper orientation="horizontal">
+          <nb-step [label]="labelOne" [stepControl]="step1">
+            <form #step1="ngForm">
+              <ng-template #labelOne>About you</ng-template>
+              <h5>Let's get to know you...</h5>
+              <p>Please tick what applies to you</p>
+              <br />
+              <br />
+              <div class="row show-grid">
+                <div class="col-12" style="text-align: center;">
+                  <div class="demo-checkboxes">
+                    <nb-checkbox name="immigration" [(ngModel)]="details.immigration" required
+                      >I would require visa sponsorship in order to work in {{ position.location }}</nb-checkbox
+                    >
+                  </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="col-12" style="text-align: center;" *ngIf="position.jobType == 'Internship'">
+                  <label>
+                    <p>Available dates (start/end)</p>
+                    <input
+                      name="availability"
+                      [(ngModel)]="details.availability"
+                      nbInput
+                      placeholder="start and end dates"
+                      [nbDatepicker]="rangepicker"
+                      required
+                    />
+                    <nb-rangepicker #rangepicker></nb-rangepicker>
+                  </label>
+                </div>
+                <div class="col-12" style="text-align: center;" *ngIf="position.jobType != 'Internship'">
+                  <label>
+                    <p>Available to start on</p>
+                    <input
+                      name="availability"
+                      [(ngModel)]="details.availability"
+                      nbInput
+                      placeholder="Starting date"
+                      [nbDatepicker]="datepicker"
+                      required
+                    />
+                    <nb-datepicker #datepicker></nb-datepicker>
+                  </label>
+                </div>
+              </div>
+
+              <br />
+              <button nbButton disabled nbStepperNext status="primary">prev</button>
+              <button nbButton nbStepperNext (click)="logdetails()" [disabled]="!step1.form.valid" status="primary">
+                next
+              </button>
+            </form>
+          </nb-step>
+          <nb-step [label]="labelTwo" [stepControl]="step2">
+            <form #step2="ngForm">
+              <ng-template #labelTwo>CV</ng-template>
+              <h5>Please upload your most recent CV</h5>
+              <p>Please use a PDF file format</p>
+              <br />
+              <br />
+              <div class="row show-grid">
+                <div
+                  class="col-12"
+                  style="text-align: center; color: red;"
+                  *ngIf="fileToUpload != undefined && fileToUpload.size > 3000000"
+                >
+                  The file size is too large. Maximum size is 3Mb.
+                </div>
+                <div class="col-12" style="text-align: center;">
+                  <div class="col-12">
+                    <input
+                      accept="application/pdf"
+                      class="form-control"
+                      type="file"
+                      (change)="getFile($event.target.files)"
+                      required
+                      style="height: 52px;"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <br />
+              <button nbButton disabled nbStepperNext status="primary">prev</button>
+              <button
+                status="primary"
+                nbButton
+                nbStepperNext
+                (click)="logdetails()"
+                [disabled]="
+                  !step2.form.valid ||
+                  fileToUpload == undefined ||
+                  (fileToUpload != undefined && fileToUpload.size > 3000000)
+                "
+              >
+                next
+              </button>
+            </form>
+          </nb-step>
+          <nb-step [label]="labelThree" [stepControl]="step3">
+            <form #step3="ngForm">
+              <ng-template #labelThree>Questions</ng-template>
+              <h5>Please answer the following questions</h5>
+              <br />
+              <br />
+              <div
+                class="row show-grid"
+                *ngFor="let question of position.questions; index as idx"
+                style="text-align: left;"
+              >
+                <div class="col-12">
+                  <span [innerHTML] = "question" class="htmlFormatQuestions"></span>
+                  <p>
+                    <small>Maximum 500 words.</small>
+                    <small [ngStyle]="answers[idx].split(' ').length > 500 && { color: 'red' }" *ngIf="answers[idx]">
+                      Current count {{ answers[idx].split(' ').length }}</small
+                    >
+                  </p>
+                  <ckeditor
+                    [editor]="editor"
+                    (change)="checkChanges()"
+                    name="idx"
+                    [(ngModel)]="answers[idx]"
+                    required
+                  ></ckeditor>
+                  <br />
+                  <br />
+                </div>
+              </div>
+              <div class="row show-grid">
+                <div class="col-12">
+                  <careers-application-apply-referral
+                    [(ngModel)]="details.referralSource"
+                    name="referralSource"
+                  ></careers-application-apply-referral>
+                </div>
+              </div>
+
+              <br />
+              <br />
+
+              <br />
+              <button nbButton disabled nbStepperNext status="primary">prev</button>
+              <button
+                status="primary"
+                nbButton
+                nbStepperNext
+                (click)="logdetails()"
+                [disabled]="!step3.form.valid || (answersObs | async) == false"
+              >
+                next
+              </button>
+            </form>
+          </nb-step>
+
+          <nb-step label="Submit">
+            <h3>Verify application details</h3>
+            <br />
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12">
+                <div (click)="downloadFile()" style="cursor: pointer;">
+                  <i style="font-size: 1.25rem;" class="ion-clipboard">Your CV</i>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12" *ngIf="position.jobType != 'Internship'">
+                <b>Availability:</b> {{ details.availability | date }}
+              </div>
+            </div>
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12" *ngIf="position.jobType == 'Internship' && details.availability != undefined">
+                <b>Availability:</b> {{ details.availability['start'] | date }} to
+                {{ details.availability['end'] | date }}
+              </div>
+            </div>
+            <br />
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12">
+                <b>Visa sponsorship:</b> {{ details.immigration == true ? 'required' : 'not required' }}
+              </div>
+            </div>
+            <br />
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12">
+                <h4>Answers:</h4>
+                <div class="row show-grid">
+                  <br />
+                  <ng-container *ngFor="let answer of objectToArray(answers); let idx = index">
+                    <div class="col-12">
+                      <b>Question {{ idx + 1 }}: </b> <span [innerHTML] ="((position$ | async)?.questions)[idx]" style="display: inline-block;"></span>
+                      <br />
+                    </div>
+                    <div class="col-12">
+                      <p [innerHTML]="answer"></p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12">
+                <div class="form-control-group accept-group">
+                  <nb-checkbox name="terms" [(ngModel)]="privacyticked" required>
+                    By checking this box, I agree to our
+                    <a href="https://www.cigp.com/terms-conditions" target="_blank"> </a>I give consent to CIGP to use
+                    the personal data submitted to CIGP as described in our
+                    <a href="https://www.cigp.com/disclaimer-privacy" target="_blank"><strong>Privacy Policy</strong></a
+                    >. By uploading data, I agree that this data may be shared to all CIGP entities around the world and
+                    accept that each entity of our Group may process this information and possibly share it with third
+                    party service providers in relation to our recruitment process.
+                  </nb-checkbox>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row show-grid" style="text-align: left;">
+              <div class="col-12">
+                <div class="form-control-group accept-group">
+                  <nb-checkbox name="terms" [(ngModel)]="retainprofile">
+                    We thank you for your interest in CIGP companies. In order retain quality profiles, should you want
+                    your profile to be considered for other opportunities, tick this box to allow us to keep your
+                    personal data in our talent pool for potential future open positions.
+                  </nb-checkbox>
+                </div>
+              </div>
+            </div>
+
+            <button nbButton nbStepperPrevious status="primary">Edit details</button>
+            <button
+              (click)="createApplication()"
+              [disabled]="!privacyticked || submittedBool"
+              nbButton
+              nbStepperNext
+              status="primary"
+            >
+              Submit application
+            </button>
+          </nb-step>
+        </nb-stepper>
+      </nb-card-body>
+    </nb-card>
+  </ng-container>
+</ng-container>
+<nb-card *ngIf="submitted$ | async">
+  <nb-card-body style="text-align: center;">
+    <h3>Your application has been submitted</h3>
+    <br />
+    <br />
+    <button class="btn btn-success" (click)="toApplication()">View your application</button>
+  </nb-card-body>
+</nb-card>

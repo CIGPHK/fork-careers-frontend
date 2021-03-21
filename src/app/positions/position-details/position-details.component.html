@@ -1,0 +1,87 @@
+<nb-card *ngIf="position$ | async as position">
+  <nb-card-body>
+    <br />
+    <br />
+    <div class="row show-grid">
+      <div class="col-4">
+        <h2>{{ position.jobTitle }}</h2>
+      </div>
+      <div class="col-4" style="text-align: center;" *ngIf="!(alreadyApplied$ | async)">
+        <button id="positiontag" (click)="toApplication()" class="btn btn-secondary btn-round">
+          APPLY TO THIS POSITION
+        </button>
+      </div>
+      <ng-container *ngIf="applicationID$ | async as applicationID">
+          <div class="col-4" style="text-align: center;">
+            <button id="positiontag" (click)="viewApplication(applicationID)" class="btn btn-secondary btn-round">
+              View application
+            </button>
+          </div>
+      </ng-container>
+      <div class="col-4" style="text-align: right;padding-right: 2%;">
+        <h6>{{ position.location }}</h6>
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-12">
+        {{ position.team }}
+        <br />
+        <br />
+      </div>
+    </div>
+    <div class="row show-grid" style="display: flex; justify-content: center;" >
+      <div class="col-12 col-sm-3 center" *ngIf="position.hasDeadline || position.hasDeadline == null">
+        <h5>Deadline</h5>
+        {{ position.deadline.seconds * 1000 | date }}
+        <br />
+        <br />
+      </div>
+      <div class="col-12 col-sm-3 center" *ngIf="position.hasStartDate || position.hasStartDate == null">
+        <h5>Start date</h5>
+        {{ position.startDate.seconds * 1000 | date }}
+        <br />
+        <br />
+      </div>
+      <div class="col-12 col-sm-3 center" *ngIf="position.discloseSalary == true">
+        <h6>Salary</h6>
+        {{ position.salaryCurrency }} {{ position.salaryMin }} - {{ position.salaryCurrency }} {{ position.salaryMax }}
+        <br />
+        <br />
+      </div>
+    </div>
+    <br />
+    <br />
+
+    <div class="row show-grid">
+      <div class="col-12">
+        <h4>Job Description</h4>
+      </div>
+    </div>
+
+    <div class="row show-grid">
+      <div class="col-12" [innerHTML]="position.description"></div>
+    </div>
+
+    <br />
+    <br />
+    <div class="row show-grid">
+      <div class="col-12">
+        <h4>Requirements</h4>
+      </div>
+    </div>
+    <div class="row show-grid">
+      <div class="col-12" [innerHTML]="position.requirements"></div>
+    </div>
+    <br />
+    <br />
+    <div class="row show-grid" *ngIf="!(alreadyApplied$ | async)">
+      <div class="col-12" style="text-align: center;">
+        <button id="positiontag" (click)="toApplication()" class="btn btn-secondary btn-round">
+          APPLY TO THIS POSITION
+        </button>
+      </div>
+    </div>
+    <br />
+    <br />
+  </nb-card-body>
+</nb-card>

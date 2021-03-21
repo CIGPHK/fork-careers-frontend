@@ -1,0 +1,47 @@
+<ng-container *ngIf="profile$ | async as profile">
+  <div class="row show-grid">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <nb-card>
+        <nb-card-header>
+          <h3>Your profile</h3>
+        </nb-card-header>
+        <nb-card-body>
+          <div class="row show-grid">
+            <div class="col-12">
+              <h5>Personal details</h5>
+            </div>
+          </div>
+          <br />
+          <div class="row show-grid">
+            <div class="col-12"><b>First name</b>: {{ profile.first }}</div>
+
+            <div class="col-12"><b>Last name</b>: {{ profile.last }}</div>
+
+            <div class="col-12"><b>Email</b>: {{ profile.email }}</div>
+
+            <div class="col-12"><b>Phone</b>: {{ profile.phone }}</div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <nb-card>
+        <nb-card-header>
+          <h3>Your applications</h3>
+        </nb-card-header>
+        <nb-card-body *ngIf="applications$ | async as applications">
+          <ng-container *ngFor="let application of applications">
+            <div style="cursor: pointer;" class="header">
+              <h5>
+                <a [routerLink]="['/applications', 'details', application.id]"
+                  >{{ (application.position$ | async)?.jobType }} | {{ (application.position$ | async)?.jobTitle }} |
+                  {{ (application.position$ | async)?.location }}</a
+                >
+              </h5>
+            </div>
+          </ng-container>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+</ng-container>

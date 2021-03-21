@@ -1,0 +1,17 @@
+@import 'themes';
+
+@import '~@nebular/theme/styles/globals';
+@import '~@nebular/bootstrap/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+  @include nb-bootstrap-global();
+}
+
+html {
+  font-size: 14px;
+}
+
+a.btn {
+  text-decoration: none;
+}

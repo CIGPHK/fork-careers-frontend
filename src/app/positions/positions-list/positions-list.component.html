@@ -1,0 +1,37 @@
+<div class="row show-grid">
+  <div *ngFor="let position of positions$ | async" class="col-12 col-sm-4 col-lg-3 col-xl-3">
+    <nb-card style="cursor: pointer;" (click)="seePosition(position.id)" size="small">
+      <nb-card-body>
+        <div class="row show-grid">
+          <div class="col-12">
+            <h4>{{ position.jobTitle | uppercase }}</h4>
+          </div>
+        </div>
+        <br />
+        <div class="row show-grid">
+          <div class="col-12">
+            <p>{{ position.jobType | uppercase }} - {{ position.team | uppercase }} </p>
+          </div>
+        </div>
+        <br />
+        <div class="row show-grid">
+          <div class="col-12">
+            <p><b>Deadline:</b>
+              <span *ngIf="position.hasDeadline || position.hasDeadline == null; else noDeadline">
+                {{ position.deadline['seconds'] * 1000 | date }}
+              </span>
+              <ng-template #noDeadline>
+                Rolling Basis
+              </ng-template>
+            </p>
+          </div>
+        </div>
+        <div class="row show-grid">
+          <div class="col-12">
+            <p>{{ position.location | uppercase }}</p>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

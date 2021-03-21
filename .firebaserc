@@ -1,0 +1,25 @@
+{
+  "projects": {
+    "uat": "cigp-careers-uat",
+    "prod": "cigp-careers"
+  },
+  "targets": {
+    "cigp-careers": {
+      "hosting": {
+        "cigp-careers": [
+          "cigp-careers"
+        ],
+        "frontend-staging": [
+          "beta-careers-frontend"
+        ]
+      }
+    },
+    "cigp-careers-uat": {
+      "hosting": {
+        "cigp-careers": [
+          "cigp-careers-uat"
+        ]
+      }
+    }
+  }
+}
